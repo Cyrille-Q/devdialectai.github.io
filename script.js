@@ -18,7 +18,7 @@
     /**
      * URL du Google Apps Script Web App
      */
-    const GOOGLE_SCRIPT_URL = 'AKfycbx7PeM8sLXuhFcaguiHpvNckbKnaWXrJOGn0glxBkKu6gdUQJxG_1rTgHLqX8-STzNVBA';
+    const GOOGLE_SCRIPT_URL = 'https://docs.google.com/spreadsheets/d/1QndexliIh-XSaUQY2Ry7t-hNZf-LXG497Nj2CkqVO8U/edit?usp=sharing';
 
     // ==================== ÉLÉMENTS DOM ====================
     
@@ -194,13 +194,6 @@
             return;
         }
 
-        // Vérification de la configuration
-        if (GOOGLE_SCRIPT_URL === 'VOTRE_URL_GOOGLE_APPS_SCRIPT_ICI') {
-            console.error('⚠️ Veuillez configurer l\'URL du Google Apps Script dans script.js');
-            showError();
-            return;
-        }
-
         // Préparation des données
         const data = {
             email: sanitizeString(emailInput.value),
@@ -281,11 +274,6 @@
 
         // Log de démarrage
         console.log('📧 Formulaire de contact initialisé');
-        
-        // Avertissement si URL non configurée
-        if (GOOGLE_SCRIPT_URL === 'VOTRE_URL_GOOGLE_APPS_SCRIPT_ICI') {
-            console.warn('⚠️ N\'oubliez pas de configurer GOOGLE_SCRIPT_URL dans script.js');
-        }
     }
 
     // Lancement au chargement du DOM
