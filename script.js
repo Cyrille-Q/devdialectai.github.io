@@ -18,7 +18,7 @@
     /**
      * URL du Google Apps Script Web App
      */
-    const GOOGLE_SCRIPT_URL = 'https://docs.google.com/spreadsheets/d/1QndexliIh-XSaUQY2Ry7t-hNZf-LXG497Nj2CkqVO8U/edit?usp=sharing';
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx7PeM8sLXuhFcaguiHpvNckbKnaWXrJOGn0glxBkKu6gdUQJxG_1rTgHLqX8-STzNVBA/exec';
 
     // ==================== ÉLÉMENTS DOM ====================
     
