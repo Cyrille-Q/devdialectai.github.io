@@ -1,0 +1,521 @@
+/**
+ * @file styles.css
+ * @description Styles pour la landing page de validation d'idée startup
+ * @version 1.0
+ * 
+ * Structure :
+ * 1. Variables CSS (couleurs, espacements, typographie)
+ * 2. Reset et base
+ * 3. Utilitaires
+ * 4. Header
+ * 5. Sections
+ * 6. Formulaire
+ * 7. Footer
+ * 8. Responsive
+ */
+
+/* ==================== 1. VARIABLES CSS ==================== */
+:root {
+    /* Couleurs principales */
+    --color-primary: #2563eb;
+    --color-primary-dark: #1d4ed8;
+    --color-primary-light: #3b82f6;
+    
+    /* Couleurs neutres */
+    --color-white: #ffffff;
+    --color-gray-50: #f9fafb;
+    --color-gray-100: #f3f4f6;
+    --color-gray-200: #e5e7eb;
+    --color-gray-300: #d1d5db;
+    --color-gray-400: #9ca3af;
+    --color-gray-500: #6b7280;
+    --color-gray-600: #4b5563;
+    --color-gray-700: #374151;
+    --color-gray-800: #1f2937;
+    --color-gray-900: #111827;
+    
+    /* Couleurs sémantiques */
+    --color-success: #10b981;
+    --color-success-bg: #d1fae5;
+    --color-error: #ef4444;
+    --color-error-bg: #fee2e2;
+    
+    /* Typographie */
+    --font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    --font-size-3xl: 1.875rem;
+    --font-size-4xl: 2.25rem;
+    
+    /* Espacements */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
+    --spacing-3xl: 4rem;
+    
+    /* Autres */
+    --border-radius: 0.5rem;
+    --border-radius-lg: 0.75rem;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    --transition: 0.2s ease-in-out;
+    --max-width: 800px;
+}
+
+/* ==================== 2. RESET ET BASE ==================== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body {
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+    color: var(--color-gray-800);
+    background-color: var(--color-white);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color var(--transition);
+}
+
+a:hover {
+    color: var(--color-primary-dark);
+    text-decoration: underline;
+}
+
+/* ==================== 3. UTILITAIRES ==================== */
+.container {
+    width: 100%;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ==================== 4. HEADER ==================== */
+.header {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: var(--color-white);
+    padding: var(--spacing-3xl) var(--spacing-md);
+    text-align: center;
+}
+
+.header__logo {
+    margin-bottom: var(--spacing-lg);
+}
+
+.header__logo-img {
+    margin: 0 auto;
+    /* Placeholder si pas de logo */
+    background-color: var(--color-white);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-sm);
+}
+
+.header__title {
+    font-size: var(--font-size-4xl);
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm);
+    letter-spacing: -0.025em;
+}
+
+.header__slogan {
+    font-size: var(--font-size-xl);
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+/* ==================== 5. SECTIONS ==================== */
+.section {
+    padding: var(--spacing-3xl) var(--spacing-md);
+}
+
+.section--pitch {
+    background-color: var(--color-white);
+}
+
+.section--schema {
+    background-color: var(--color-gray-50);
+}
+
+.section--cta {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    text-align: center;
+}
+
+.section--form {
+    background-color: var(--color-white);
+    padding-bottom: var(--spacing-3xl);
+}
+
+.section__title {
+    font-size: var(--font-size-2xl);
+    font-weight: 600;
+    margin-bottom: var(--spacing-xl);
+    color: var(--color-gray-900);
+}
+
+.section--cta .section__title,
+.cta__title {
+    color: var(--color-white);
+}
+
+/* Section Pitch */
+.pitch__content p {
+    margin-bottom: var(--spacing-lg);
+    font-size: var(--font-size-lg);
+    color: var(--color-gray-700);
+}
+
+.pitch__content p:last-child {
+    margin-bottom: 0;
+}
+
+.pitch__content strong {
+    color: var(--color-gray-900);
+}
+
+/* Section Schéma */
+.schema__figure {
+    text-align: center;
+}
+
+.schema__img {
+    max-width: 150%;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+    margin: 0 auto;
+    /* Placeholder */
+    min-height: 200px;
+    background-color: var(--color-gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.schema__caption {
+    margin-top: var(--spacing-md);
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-500);
+    font-style: italic;
+}
+
+/* Section CTA */
+.cta__title {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+}
+
+.cta__text {
+    font-size: var(--font-size-lg);
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* ==================== 6. FORMULAIRE ==================== */
+.form {
+    max-width: 500px;
+    margin: 0 auto;
+    background-color: var(--color-white);
+    padding: var(--spacing-xl);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+}
+
+.form__group {
+    margin-bottom: var(--spacing-lg);
+}
+
+.form__group:last-of-type {
+    margin-bottom: var(--spacing-xl);
+}
+
+.form__label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-gray-700);
+}
+
+.form__required {
+    color: var(--color-error);
+}
+
+.form__input,
+.form__textarea {
+    width: 100%;
+    padding: var(--spacing-md);
+    font-size: var(--font-size-base);
+    font-family: inherit;
+    border: 2px solid var(--color-gray-200);
+    border-radius: var(--border-radius);
+    transition: border-color var(--transition), box-shadow var(--transition);
+    background-color: var(--color-white);
+}
+
+.form__input:focus,
+.form__textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form__input.form__input--error,
+.form__textarea.form__textarea--error {
+    border-color: var(--color-error);
+}
+
+.form__input.form__input--error:focus,
+.form__textarea.form__textarea--error:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.form__textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form__error {
+    display: block;
+    margin-top: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--color-error);
+    min-height: 1.25rem;
+}
+
+/* Checkbox */
+.form__group--checkbox {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+}
+
+.form__checkbox {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    cursor: pointer;
+    accent-color: var(--color-primary);
+    flex-shrink: 0;
+}
+
+.form__label--checkbox {
+    flex: 1;
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-600);
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+.form__label--checkbox a {
+    font-weight: 500;
+}
+
+/* Bouton submit */
+.form__submit {
+    width: 100%;
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    font-family: inherit;
+    color: var(--color-white);
+    background-color: var(--color-primary);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color var(--transition), transform var(--transition);
+}
+
+.form__submit:hover:not(:disabled) {
+    background-color: var(--color-primary-dark);
+}
+
+.form__submit:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.form__submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.form__submit-loading {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+/* Messages de succès/erreur */
+.form__success,
+.form__error-global {
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
+    text-align: center;
+    font-weight: 500;
+}
+
+.form__success {
+    background-color: var(--color-success-bg);
+    color: var(--color-success);
+}
+
+.form__error-global {
+    background-color: var(--color-error-bg);
+    color: var(--color-error);
+}
+
+/* ==================== 7. FOOTER ==================== */
+.footer {
+    background-color: var(--color-gray-900);
+    color: var(--color-gray-400);
+    padding: var(--spacing-xl) var(--spacing-md);
+    text-align: center;
+}
+
+.footer__nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-md) var(--spacing-xl);
+    margin-bottom: var(--spacing-md);
+}
+
+.footer__link {
+    color: var(--color-gray-400);
+    font-size: var(--font-size-sm);
+    transition: color var(--transition);
+}
+
+.footer__link:hover {
+    color: var(--color-white);
+    text-decoration: none;
+}
+
+.footer__copyright {
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-500);
+}
+
+/* ==================== 8. RESPONSIVE ==================== */
+
+/* Tablette */
+@media (max-width: 768px) {
+    :root {
+        --font-size-4xl: 2rem;
+        --font-size-3xl: 1.5rem;
+        --font-size-2xl: 1.25rem;
+    }
+    
+    .header {
+        padding: var(--spacing-2xl) var(--spacing-md);
+    }
+    
+    .section {
+        padding: var(--spacing-2xl) var(--spacing-md);
+    }
+    
+    .form {
+        padding: var(--spacing-lg);
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    :root {
+        --font-size-4xl: 1.75rem;
+        --font-size-3xl: 1.375rem;
+        --font-size-2xl: 1.125rem;
+        --font-size-lg: 1rem;
+    }
+    
+    .header__logo-img {
+        max-width: 80px;
+        max-height: 60px;
+    }
+    
+    .pitch__content p {
+        font-size: var(--font-size-base);
+    }
+    
+    .footer__nav {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+}
+
+/* Préférence de mouvement réduit */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    html {
+        scroll-behavior: auto;
+    }
+}
+
+/* Mode sombre (optionnel - respect des préférences système) */
+@media (prefers-color-scheme: dark) {
+    /* Désactivé par défaut - décommenter si souhaité
+    :root {
+        --color-white: #1f2937;
+        --color-gray-50: #111827;
+        --color-gray-100: #1f2937;
+        --color-gray-700: #d1d5db;
+        --color-gray-800: #e5e7eb;
+        --color-gray-900: #f9fafb;
+    }
+    */
+}

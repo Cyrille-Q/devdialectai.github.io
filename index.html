@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Découvrez notre projet innovant et rejoignez les premiers intéressés.">
+    <title>DevDialect.ai - Landing Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Pas de cookies marketing / tracking - Conforme RGPD -->
+</head>
+<body>
+    <!-- ==================== HEADER ==================== -->
+    <header class="header">
+        <div class="container">
+            <div class="header__logo">
+                <img src="assets/logo.png" alt="Logo du projet" class="header__logo-img">
+            </div>
+            <h1 class="header__title">Assistant de développement IA - Solution On-Premise</h1>
+            <p class="header__slogan">Votre SML, taillé pour les développeurs</p>
+        </div>
+    </header>
+
+    <main>
+        <!-- ==================== SECTION PITCH ==================== -->
+        <section class="section section--pitch" id="pitch">
+            <div class="container">
+                <h2 class="section__title">Notre Vision</h2>
+                <div class="pitch__content">
+					<p>Aujourd’hui, les assistants de développement basés sur l’IA sont puissants…<br>
+					mais <strong>peu adaptés aux réalités des entreprises logicielles</strong>.</p>
+
+					<p>Ils fonctionnent majoritairement en cloud,<br>
+					ne connaissent pas vos <strong>frameworks internes</strong>,<br>
+					ignorent votre <strong>logique métier</strong>,<br>
+					et posent des questions de <strong>confidentialité, de coûts et de performance</strong>.</p>
+
+					<p>Nous travaillons sur une approche différente :<br>
+					un <strong>assistant de développement on‑premise</strong>, basé sur un <strong>Small Language Model (SLM)</strong>,<br>
+					<strong>spécialisé pour le développement logiciel</strong> et <strong>connecté à votre savoir‑faire interne</strong>.</p>
+
+					<p>
+						<span class="emoji">🎯</span> Objectif : générer du code <strong>pertinent, conforme et exploitable</strong>,<br>
+						<span class="emoji">📉</span> avec une <strong>latence réduite</strong>,<br>
+						<span class="emoji">🔐</span> sans fuite de propriété intellectuelle,<br>
+						<span class="emoji">💸</span> et à un <strong>coût d’inférence maîtrisé</strong>.
+					</p>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SECTION SCHÉMA ==================== -->
+        <section class="section section--schema" id="schema">
+            <div class="container">
+                <h2 class="section__title">Comment ça marche ?</h2>
+                <figure class="schema__figure">
+                    <img 
+                        src="assets/schema.jpg" 
+                        alt="Schéma explicatif du fonctionnement du projet" 
+                        class="schema__img"
+                    >
+                    <figcaption class="schema__caption">
+                        Notre processus en étapes simples
+                    </figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <!-- ==================== SECTION CTA ==================== -->
+        <section class="section section--cta" id="cta">
+            <div class="container">
+                <h2 class="cta__title">Intéressé(e) par notre projet ?</h2>
+                <p class="cta__text">
+                    Laissez-nous vos coordonnées pour rester informé(e).
+                </p>
+            </div>
+        </section>
+
+        <!-- ==================== SECTION FORMULAIRE ==================== -->
+        <section class="section section--form" id="contact">
+            <div class="container">
+                <form id="contact-form" class="form" novalidate>
+                    <div class="form__group">
+                        <label for="email" class="form__label">
+                            Adresse email <span class="form__required">*</span>
+                        </label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="form__input" 
+                            placeholder="votre@email.com"
+                            required
+                            autocomplete="email"
+                        >
+                        <span class="form__error" id="email-error"></span>
+                    </div>
+
+                    <div class="form__group">
+                        <label for="message" class="form__label">
+                            Message (facultatif)
+                        </label>
+                        <textarea 
+                            id="message" 
+                            name="message" 
+                            class="form__textarea" 
+                            placeholder="Dites-nous ce qui vous intéresse dans ce projet..."
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <div class="form__group form__group--checkbox">
+                        <input 
+                            type="checkbox" 
+                            id="consent" 
+                            name="consent" 
+                            class="form__checkbox"
+                            required
+                        >
+                        <label for="consent" class="form__label form__label--checkbox">
+                            J'accepte que mes données soient utilisées uniquement pour être 
+                            recontacté(e) dans le cadre de ce projet. 
+                            <a href="privacy.html" target="_blank" rel="noopener">
+                                Politique de confidentialité
+                            </a>
+                            <span class="form__required">*</span>
+                        </label>
+                        <span class="form__error" id="consent-error"></span>
+                    </div>
+
+                    <button type="submit" id="submit-btn" class="form__submit">
+                        <span class="form__submit-text">Je suis intéressé(e)</span>
+                        <span class="form__submit-loading" hidden>Envoi en cours...</span>
+                    </button>
+
+                    <!-- Message de confirmation -->
+                    <div id="form-success" class="form__success" hidden>
+                        <p>✅ Merci pour votre intérêt !</p>
+                    </div>
+
+                    <!-- Message d'erreur global -->
+                    <div id="form-error" class="form__error-global" hidden>
+                        <p>❌ Une erreur est survenue. Veuillez réessayer plus tard.</p>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer">
+        <div class="container">
+            <nav class="footer__nav">
+                <a href="legal.html" class="footer__link">Mentions légales</a>
+                <a href="privacy.html" class="footer__link">Politique de confidentialité</a>
+                <a href="mailto:contact@devdialectai.fr" class="footer__link">Contact</a>
+            </nav>
+            <p class="footer__copyright">
+                © 2025 DevDialect.ai. Tous droits réservés.
+            </p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
