@@ -80,6 +80,19 @@
         <section class="section section--form" id="contact">
             <div class="container">
                 <form id="contact-form" class="form" novalidate>
+                    <!-- Honeypot anti-bot (champ invisible) -->
+                    <div class="form__group form__group--honeypot" aria-hidden="true">
+                        <label for="website" class="form__label">Website</label>
+                        <input 
+                            type="text" 
+                            id="website" 
+                            name="website" 
+                            class="form__input form__input--honeypot"
+                            tabindex="-1"
+                            autocomplete="off"
+                        >
+                    </div>
+
                     <div class="form__group">
                         <label for="email" class="form__label">
                             Adresse email <span class="form__required">*</span>
@@ -106,7 +119,9 @@
                             class="form__textarea" 
                             placeholder="Dites-nous ce qui vous intéresse dans ce projet..."
                             rows="4"
+                            maxlength="500"
                         ></textarea>
+                        <span class="form__hint">Maximum 500 caractères</span>
                     </div>
 
                     <div class="form__group form__group--checkbox">
