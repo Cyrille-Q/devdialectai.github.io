@@ -358,6 +358,26 @@ a:hover {
     font-weight: 500;
 }
 
+/* Honeypot anti-bot (invisible) */
+.form__group--honeypot {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Hint pour le compteur de caractères */
+.form__hint {
+    display: block;
+    margin-top: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-500);
+}
+
 /* Bouton submit */
 .form__submit {
     width: 100%;

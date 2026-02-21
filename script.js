@@ -1,13 +1,22 @@
 /**
  * @file script.js
  * @description Gestion du formulaire de contact pour la landing page
- * @version 1.0
+ * @version 2.0
  * 
  * Fonctionnalités :
- * - Validation côté client (email, consentement)
+ * - Validation côté client (email, consentement, longueur message)
+ * - Protection anti-bot (honeypot)
+ * - Token de sécurité simple
+ * - Rate limiting côté client
  * - Envoi des données vers Google Apps Script
  * - Gestion des états (loading, success, error)
- * - Sanitization basique des entrées
+ * - Sanitization des entrées
+ * 
+ * Sécurité :
+ * - Honeypot pour bloquer les bots basiques
+ * - Token de vérification
+ * - Validation stricte des données
+ * - Protection contre le spam (rate limiting)
  */
 
 (function() {
@@ -20,12 +29,33 @@
      */
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx7PeM8sLXuhFcaguiHpvNckbKnaWXrJOGn0glxBkKu6gdUQJxG_1rTgHLqX8-STzNVBA/exec';
 
+    /**
+     * Token de sécurité simple pour filtrer les requêtes non autorisées
+     * Note: Ce token est visible côté client, il sert à bloquer les scripts automatisés basiques
+     * Pour une vraie sécurité, utilisez un backend avec authentification
+     */
+    const SECURITY_TOKEN = 'DDai_2025_LandingPage_SecureToken';
+
+    /**
+     * Configuration de la validation
+     */
+    const VALIDATION_CONFIG = {
+        maxMessageLength: 500,
+        minTimeBetweenSubmissions: 30000, // 30 secondes entre chaque soumission
+    };
+
+    /**
+     * Stockage du dernier timestamp de soumission (rate limiting client)
+     */
+    let lastSubmissionTime = 0;
+
     // ==================== ÉLÉMENTS DOM ====================
     
     const form = document.getElementById('contact-form');
     const emailInput = document.getElementById('email');
     const messageInput = document.getElementById('message');
     const consentCheckbox = document.getElementById('consent');
+    const honeypotInput = document.getElementById('website'); // Champ honeypot
     const submitBtn = document.getElementById('submit-btn');
     const submitText = submitBtn.querySelector('.form__submit-text');
     const submitLoading = submitBtn.querySelector('.form__submit-loading');
@@ -37,13 +67,43 @@
     // ==================== UTILITAIRES ====================
 
     /**
-     * Valide le format d'une adresse email
+     * Valide le format d'une adresse email (regex plus stricte)
      * @param {string} email - L'adresse email à valider
      * @returns {boolean} - True si l'email est valide
      */
     function isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
+        // Regex plus complète pour la validation email
+        const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+        return email.length <= 254 && emailRegex.test(email);
+    }
+
+    /**
+     * Vérifie si le honeypot est rempli (indique un bot)
+     * @returns {boolean} - True si c'est probablement un bot
+     */
+    function isBot() {
+        return honeypotInput && honeypotInput.value.trim() !== '';
+    }
+
+    /**
+     * Vérifie le rate limiting côté client
+     * @returns {boolean} - True si le délai minimum est respecté
+     */
+    function canSubmit() {
+        const now = Date.now();
+        const timeSinceLastSubmission = now - lastSubmissionTime;
+        return timeSinceLastSubmission >= VALIDATION_CONFIG.minTimeBetweenSubmissions;
+    }
+
+    /**
+     * Calcule le temps restant avant la prochaine soumission possible
+     * @returns {number} - Temps restant en secondes
+     */
+    function getTimeUntilNextSubmission() {
+        const now = Date.now();
+        const timeSinceLastSubmission = now - lastSubmissionTime;
+        const remaining = VALIDATION_CONFIG.minTimeBetweenSubmissions - timeSinceLastSubmission;
+        return Math.ceil(remaining / 1000);
     }
 
     /**
@@ -129,10 +189,27 @@
 
     /**
      * Valide le formulaire complet
-     * @returns {boolean} - True si le formulaire est valide
+     * @returns {{isValid: boolean, reason?: string}} - Résultat de la validation
      */
     function validateForm() {
         let isValid = true;
+        let reason = null;
+
+        // Vérification honeypot (silencieuse - on ne dit pas à l'utilisateur)
+        if (isBot()) {
+            console.warn('🤖 Bot détecté via honeypot');
+            return { isValid: false, reason: 'bot_detected', silent: true };
+        }
+
+        // Vérification rate limiting
+        if (!canSubmit()) {
+            const timeRemaining = getTimeUntilNextSubmission();
+            return { 
+                isValid: false, 
+                reason: `Veuillez patienter ${timeRemaining} secondes avant de renvoyer.`,
+                silent: false 
+            };
+        }
         
         // Validation email
         const email = emailInput.value.trim();
@@ -146,6 +223,13 @@
             clearFieldError(emailInput, emailError);
         }
 
+        // Validation longueur du message
+        const message = messageInput.value;
+        if (message && message.length > VALIDATION_CONFIG.maxMessageLength) {
+            showFieldError(messageInput, null, `Le message ne doit pas dépasser ${VALIDATION_CONFIG.maxMessageLength} caractères.`);
+            isValid = false;
+        }
+
         // Validation consentement RGPD
         if (!consentCheckbox.checked) {
             showFieldError(consentCheckbox, consentError, 'Vous devez accepter la politique de confidentialité.');
@@ -154,7 +238,7 @@
             clearFieldError(consentCheckbox, consentError);
         }
 
-        return isValid;
+        return { isValid, reason };
     }
 
     // ==================== ENVOI DES DONNÉES ====================
@@ -165,18 +249,42 @@
      * @returns {Promise<Object>} - La réponse du serveur
      */
     async function submitToGoogleScript(data) {
+        // Ajout du token de sécurité et métadonnées
+        const securedData = {
+            ...data,
+            token: SECURITY_TOKEN,
+            clientTimestamp: new Date().toISOString(),
+            userAgent: navigator.userAgent.substring(0, 200), // Limité pour éviter les abus
+        };
+
         const response = await fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
             mode: 'no-cors', // Nécessaire pour Google Apps Script
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data),
+            body: JSON.stringify(securedData),
         });
 
         // Avec mode: 'no-cors', on ne peut pas lire la réponse
         // On considère que c'est un succès si pas d'erreur réseau
         return { success: true };
+    }
+
+    /**
+     * Affiche un message d'erreur temporaire
+     * @param {string} message - Le message à afficher
+     */
+    function showTemporaryError(message) {
+        const errorDiv = document.getElementById('form-error');
+        if (errorDiv) {
+            errorDiv.querySelector('p').textContent = `❌ ${message}`;
+            errorDiv.hidden = false;
+            // Cache automatiquement après 5 secondes
+            setTimeout(() => {
+                errorDiv.hidden = true;
+            }, 5000);
+        }
     }
 
     /**
@@ -190,14 +298,29 @@
         hideMessages();
 
         // Validation
-        if (!validateForm()) {
+        const validation = validateForm();
+        if (!validation.isValid) {
+            // Si c'est un bot, on simule un succès (pour ne pas révéler la détection)
+            if (validation.silent) {
+                // Délai simulé pour paraître naturel
+                setLoadingState(true);
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                setLoadingState(false);
+                showSuccess();
+                console.log('🤖 Soumission bot ignorée silencieusement');
+                return;
+            }
+            // Affiche le message d'erreur si ce n'est pas silencieux
+            if (validation.reason) {
+                showTemporaryError(validation.reason);
+            }
             return;
         }
 
-        // Préparation des données
+        // Préparation des données (avec sanitization)
         const data = {
             email: sanitizeString(emailInput.value),
-            message: sanitizeString(messageInput.value),
+            message: sanitizeString(messageInput.value).substring(0, VALIDATION_CONFIG.maxMessageLength),
             consent: consentCheckbox.checked,
             timestamp: new Date().toISOString(),
             source: window.location.href,
@@ -208,6 +331,10 @@
 
         try {
             await submitToGoogleScript(data);
+            
+            // Mise à jour du timestamp de dernière soumission (rate limiting)
+            lastSubmissionTime = Date.now();
+            
             showSuccess();
             
             // Analytics optionnel (sans tracking invasif)
